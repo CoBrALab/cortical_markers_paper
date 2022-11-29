@@ -1,0 +1,117 @@
+# Quadratic age effect
+
+library(RMINC)
+library(readxl)
+library(reshape2)
+
+wd = getwd() # IMPORTANT: working directory has to be the same directory that the R file is in
+dir.create("./results/", showWarnings = FALSE) # create results folder
+
+# Specify the paths to excel files and vertex files
+path_to_csv = "../../master_anon.csv"
+path_to_outputs = "../../vertex_files_20mm_anon/"
+
+# Import datasets
+all_dataset = read.csv(path_to_csv)
+
+# Remove IDs that don't pass CIVET QC, T1w QC or T2w QC
+all_subset = subset(all_dataset, (all_dataset$qc_civet != 0) & (all_dataset$qc_t1w <= 2) & (all_dataset$qc_t2w <= 2), select=c(ID, age, sex))
+
+# Substract age by the minimum age
+all_subset$age = all_subset$age - min(all_subset$age)
+
+# Encode vertex files
+markers_left = list()
+markers_right = list()
+
+# Take inputs that are residualized for curvature
+markers_left[[1]] = paste0(path_to_outputs,"BSC_res_curv/",all_subset$ID,"_BSC_res_curv_left.txt")
+markers_right[[1]] = paste0(path_to_outputs,"BSC_res_curv/", all_subset$ID, "_BSC_res_curv_right.txt")
+markers_left[[2]] = paste0(path_to_outputs,"GWC_res_curv/",all_subset$ID,"_GWC_res_curv_left.txt")
+markers_right[[2]] = paste0(path_to_outputs,"GWC_res_curv/", all_subset$ID, "_GWC_res_curv_right.txt")
+markers_left[[3]] = paste0(path_to_outputs,"CT_res_curv/",all_subset$ID,"_CT_res_curv_left.txt")
+markers_right[[3]] = paste0(path_to_outputs,"CT_res_curv/", all_subset$ID, "_CT_res_curv_right.txt")
+markers_left[[4]] = paste0(path_to_outputs,"t1t2_ratio_25_GM_res_curv/",all_subset$ID,"_t1t2_ratio_25_res_curv_left.txt")
+markers_right[[4]] = paste0(path_to_outputs,"t1t2_ratio_25_GM_res_curv/", all_subset$ID, "_t1t2_ratio_25_res_curv_right.txt")
+markers_left[[5]] = paste0(path_to_outputs,"t1t2_ratio_25_WM_res_curv/", all_subset$ID, "_t1t2_ratio_25_WM_res_curv_left.txt")
+markers_right[[5]] = paste0(path_to_outputs,"t1t2_ratio_25_WM_res_curv/", all_subset$ID, "_t1t2_ratio_25_WM_res_curv_right.txt")
+markers_left[[6]] = paste0(path_to_outputs,"t1t2_ratio_50_GM_res_curv/", all_subset$ID, "_t1t2_ratio_50_res_curv_left.txt")
+markers_right[[6]] = paste0(path_to_outputs,"t1t2_ratio_50_GM_res_curv/", all_subset$ID, "_t1t2_ratio_50_res_curv_right.txt")
+
+# Marker list (in the right order)
+names = c("BSC", "GWC", "CT", "t1t2_ratio_25_GM", "t1t2_ratio_25_WM", "t1t2_ratio_50_GM")
+
+lm_markers_left = list()
+lm_markers_right = list()
+
+# Initialize beta thresholds
+thresholds = c(-1, 1, -1.5, 1.5, -2, 2)
+row_names = c("-1 SD", "+1 SD", "-1.5 SD", "+1.5 SD", "-2 SD", "+2 SD")
+beta_thresholds_age1 = as.data.frame(matrix(0, ncol = length(names), nrow = length(row_names)))
+row.names(beta_thresholds_age1) = row_names
+colnames(beta_thresholds_age1) = names
+beta_thresholds_age2 = as.data.frame(matrix(0, ncol = length(names), nrow = length(row_names)))
+row.names(beta_thresholds_age2) = row_names
+colnames(beta_thresholds_age2) = names
+
+# Initialize tvalue thresholds
+tvalue_thresholds = matrix(nrow = 25, ncol = 0)
+
+col_names = c("F-statistic", "R-squared", "beta_intercept", "beta_polyAge_2_1", "beta_polyAge_2_2",
+              "beta_sex_Male", "tvalue_intercept", "tvalue_polyAge_2_1", "tvalue_polyAge_2_2", 
+              "tvalue_sex_Male", "logLik", "qvalue_Fstatistic", "qvalue_tvalue_intercept", "qvalue_tvalue_polyAge_2_1",
+              "qvalue_tvalue_polyAge_2_2", "qvalue_tvalue_sex_Male", "sig_beta_age1", "sig_beta_age2")
+
+# For each marker...
+for (i in 1:6){
+  print(names[i])
+  print(head(markers_left[[i]]))
+
+  # Fit linear models to each vertex
+  print("Fit linear models to each vertex")
+  lm_markers_left[[i]] = vertexLm(markers_left[[i]] ~ poly(age,2) + sex, all_subset)
+  lm_markers_right[[i]] = vertexLm(markers_right[[i]] ~ poly(age,2) + sex, all_subset)
+  
+  # FDR correction
+  print("FDR correction")
+  tvalue_thresholds = cbind(tvalue_thresholds, rep(NA, 25), paste0(names[i], " left"), melt(print(vertexFDR(lm_markers_left[[i]]))))
+  tvalue_thresholds = cbind(tvalue_thresholds, rep(NA, 25), paste0(names[i], " right"), melt(print(vertexFDR(lm_markers_right[[i]]))))
+  
+  write.csv(tvalue_thresholds, './results/tvalue_thresholds.csv', row.names = TRUE)
+  
+  lm_markers_left[[i]] = as.data.frame(cbind(lm_markers_left[[i]], vertexFDR(lm_markers_left[[i]])))
+  lm_markers_right[[i]] = as.data.frame(cbind(lm_markers_right[[i]], vertexFDR(lm_markers_right[[i]])))
+
+  # Add column of only significant betas (not-significant = 0)
+  print("Column for only significant betas (not-significant = 0)")
+  lm_markers_left[[i]]$sig_beta_age1 = 0
+  lm_markers_right[[i]]$sig_beta_age1 = 0
+  lm_markers_left[[i]]$sig_beta_age2 = 0
+  lm_markers_right[[i]]$sig_beta_age2 = 0
+
+  for (vertex in 1:40962){
+    if(lm_markers_left[[i]]$`qvalue-tvalue-poly(age, 2)1`[vertex] < 0.05) {lm_markers_left[[i]]$sig_beta_age1[vertex] = lm_markers_left[[i]]$`beta-poly(age, 2)1`[vertex]}
+    if(lm_markers_right[[i]]$`qvalue-tvalue-poly(age, 2)1`[vertex] < 0.05) {lm_markers_right[[i]]$sig_beta_age1[vertex] = lm_markers_right[[i]]$`beta-poly(age, 2)1`[vertex]}
+    if(lm_markers_left[[i]]$`qvalue-tvalue-poly(age, 2)2`[vertex] < 0.05) {lm_markers_left[[i]]$sig_beta_age2[vertex] = lm_markers_left[[i]]$`beta-poly(age, 2)2`[vertex]}
+    if(lm_markers_right[[i]]$`qvalue-tvalue-poly(age, 2)2`[vertex] < 0.05) {lm_markers_right[[i]]$sig_beta_age2[vertex] = lm_markers_right[[i]]$`beta-poly(age, 2)2`[vertex]}
+  }
+
+  # Change columns names
+  print("Change column names")
+  colnames(lm_markers_left[[i]]) = col_names
+  colnames(lm_markers_right[[i]]) = col_names
+
+  # Beta thresholds for visualization
+  print("Beta thresholds csv for visualization")
+  for (tresh in 1:length(thresholds)){
+    beta_thresholds_age1[tresh,i] = mean(rbind(lm_markers_left[[i]]$`beta_polyAge_2_1`, lm_markers_right[[i]]$`beta_polyAge_2_1`)) + thresholds[tresh] * sd(rbind(lm_markers_left[[i]]$`beta_polyAge_2_1`, lm_markers_right[[i]]$`beta_polyAge_2_1`))
+    beta_thresholds_age2[tresh,i] = mean(rbind(lm_markers_left[[i]]$`beta_polyAge_2_2`, lm_markers_right[[i]]$`beta_polyAge_2_2`)) + thresholds[tresh] * sd(rbind(lm_markers_left[[i]]$`beta_polyAge_2_2`, lm_markers_right[[i]]$`beta_polyAge_2_2`))
+  }
+  write.csv(beta_thresholds_age1, './results/beta_thresholds_age1.csv', row.names = TRUE)
+  write.csv(beta_thresholds_age2, './results/beta_thresholds_age2.csv', row.names = TRUE)
+  
+  # Write results to csv
+  print("Write to csv")
+  write.table(lm_markers_left[[i]], paste0('./results/lm_', names[i],'_left_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+  write.table(lm_markers_right[[i]], paste0('./results/lm_', names[i],'_right_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+}
