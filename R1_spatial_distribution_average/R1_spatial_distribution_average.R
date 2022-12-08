@@ -74,5 +74,5 @@ for (i in 1:length(names)){
   write.csv(means_right[[i]], paste0('./data_new/mean_all_', names[i],'_right.csv'), row.names = FALSE)
 }
 
-write.csv(mean_thresholds, './data_new/mean_thresholds_all.csv', row.names = TRUE)
+write.csv(mean_thresholds, './data_new/mean_thresholds_all.csv', col.names = FALSE, row.names = TRUE)
 
