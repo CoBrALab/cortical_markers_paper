@@ -124,5 +124,6 @@ for (i in 1:length(names)){
   
   # Write results to csv
   cat("\nWrite results to csv")
-  write.csv(results_right[[i]]$AIC, paste0('./data_new/AIC_', names[i],'_right.csv'), row.names = FALSE)
+  write.table(results_right[[i]]$AIC, paste0('./data_new/AIC_', names[i],'_right_FDR.csv'), sep=",", col.names = FALSE, row.names = FALSE)
+  write.table(results_left[[i]]$AIC, paste0('./data_new/AIC_', names[i],'_left_FDR.csv'), sep=",", col.names = FALSE, row.names = FALSE)
 }

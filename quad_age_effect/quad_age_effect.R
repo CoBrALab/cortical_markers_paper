@@ -113,6 +113,6 @@ for (i in 1:6){
   
   # Write results to csv
   print("Write to csv")
-  write.table(lm_markers_left[[i]]$beta_polyAge_2_2, paste0('./data_new/lm_', names[i],'_left_FDR.csv'), sep=",", col.names = FALSE, row.names = FALSE)
   write.table(lm_markers_right[[i]]$beta_polyAge_2_2, paste0('./data_new/lm_', names[i],'_right_FDR.csv'), sep=",", col.names = FALSE, row.names = FALSE)
+  write.table(lm_markers_left[[i]]$beta_polyAge_2_2, paste0('./data_new/lm_', names[i],'_left_FDR.csv'), sep=",", col.names = FALSE, row.names = FALSE)
 }

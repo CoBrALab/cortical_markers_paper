@@ -87,8 +87,8 @@ for (i in 1:length(names)){
 
   # Write results to csv
   cat("\nWrite to csv")
-  write.table(lm_markers_left[[i]], paste0('./data_new/lm_', names[i],'_left_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
-  write.table(lm_markers_right[[i]], paste0('./data_new/lm_', names[i],'_right_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+  write.table(lm_markers_left[[i]]$`beta-age`, paste0('./data_new/lm_', names[i],'_left_FDR.csv'), sep=",", col.names = FALSE, row.names = FALSE)
+  write.table(lm_markers_right[[i]]$`beta-age`, paste0('./data_new/lm_', names[i],'_right_FDR.csv'), sep=",", col.names = FALSE, row.names = FALSE)
 
   cat("\nBeta thresholds csv for visualization")
   for (tresh in 1:length(thresholds)){
