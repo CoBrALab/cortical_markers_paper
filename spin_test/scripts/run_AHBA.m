@@ -1,5 +1,5 @@
 
-analysis_directory = '../../descriptive_stats_AHBA/';
+analysis_directory = '../AHBA/data_paper/';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% MEANS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Spin BSC data
