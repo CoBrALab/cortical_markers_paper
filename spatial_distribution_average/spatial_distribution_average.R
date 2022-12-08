@@ -10,8 +10,8 @@ dir.create("./data_new/", showWarnings = FALSE) # create new results folder
 dir.create("./spin_test/", showWarnings = FALSE) # create new results folder
 
 # Specify the paths to excel files and vertex files
-path_to_csv = "../../master_anon.csv"
-path_to_outputs = "../../vertex_files_20mm_anon/"
+path_to_csv = "../master_anon.csv"
+path_to_outputs = "../vertex_files_20mm_anon/"
 
 # Import datasets
 all_dataset = read.csv(path_to_csv)
