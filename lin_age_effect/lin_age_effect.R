@@ -70,7 +70,7 @@ for (i in 1:length(names)){
   tvalue_thresholds = cbind(tvalue_thresholds, rep(NA, 20), paste0(names[i], " left"), melt(print(vertexFDR(lm_markers_left[[i]]))))
   tvalue_thresholds = cbind(tvalue_thresholds, rep(NA, 20), paste0(names[i], " right"), melt(print(vertexFDR(lm_markers_right[[i]]))))
   
-  write.csv(tvalue_thresholds, './results/tvalue_thresholds.csv', row.names = TRUE)
+  write.csv(tvalue_thresholds, './data_new/tvalue_thresholds.csv', row.names = TRUE)
   
   lm_markers_left[[i]] = as.data.frame(cbind(lm_markers_left[[i]], vertexFDR(lm_markers_left[[i]])))
   lm_markers_right[[i]] = as.data.frame(cbind(lm_markers_right[[i]], vertexFDR(lm_markers_right[[i]])))

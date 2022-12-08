@@ -1,5 +1,5 @@
 
-analysis_directory = '../../age_effect_linreg_civetqc1_cov_sex_all_res_curv/spin_test/';
+analysis_directory = '../lin_age_effect/data_new/';
 
 %%%%%%%%%%%%%%%%% betas_age
 
