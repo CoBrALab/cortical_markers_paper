@@ -70,8 +70,8 @@ for (i in 1:length(names)){
   }
   
   cat("\nWrite results to csv")
-  write.csv(means_left[[i]], paste0('./data_new/mean_all_', names[i],'_left.csv'), row.names = FALSE)
-  write.csv(means_right[[i]], paste0('./data_new/mean_all_', names[i],'_right.csv'), row.names = FALSE)
+  write.table(means_left[[i]], paste0('./data_new/mean_all_', names[i],'_left.csv'), sep=",", col.names = FALSE, row.names = FALSE)
+  write.table(means_right[[i]], paste0('./data_new/mean_all_', names[i],'_right.csv'), sep=",", col.names = FALSE, row.names = FALSE)
 }
 
 write.csv(mean_thresholds, './data_new/mean_thresholds_all.csv', col.names = FALSE, row.names = TRUE)
