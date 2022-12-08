@@ -87,7 +87,7 @@ for (i in 1:length(names)){
   
   # Write results to csv
   cat("\nWrite results to csv")
-  write.csv(results_left[[i]], paste0('./data_new/AIC_', names[i],'_left.csv'), row.names = FALSE)
+  write.csv(results_left[[i]]$AIC, paste0('./data_new/AIC_', names[i],'_left.csv'), row.names = FALSE)
 }
 
 # Run AIC for the right hemisphere values
@@ -124,5 +124,5 @@ for (i in 1:length(names)){
   
   # Write results to csv
   cat("\nWrite results to csv")
-  write.csv(results_right[[i]], paste0('./data_new/AIC_', names[i],'_right.csv'), row.names = FALSE)
+  write.csv(results_right[[i]]$AIC, paste0('./data_new/AIC_', names[i],'_right.csv'), row.names = FALSE)
 }
