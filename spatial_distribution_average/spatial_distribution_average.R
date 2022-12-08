@@ -49,7 +49,7 @@ colnames(mean_thresholds) = names
 thresholds = c(-1, 1, -1.5, 1.5, -2, 2)
 
 # For each marker
-for (i in 1:7){
+for (i in 1:6){
   print(names[i])
   print(head(markers_left[[i]]))
 
@@ -68,6 +68,7 @@ for (i in 1:7){
   write.csv(mean_thresholds, './data_new/mean_thresholds_all.csv', row.names = TRUE)
   
   print("Write results to csv")
-  write.table(means_left[[i]], paste0('./data_new/mean_all_', names[i],'_left.csv'), sep=",", col.names = TRUE, row.names = FALSE)
-  write.table(means_right[[i]], paste0('./data_new/mean_all_', names[i],'_right.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+  write.table(means_left[[i]], paste0('./data_new/mean_all_', names[i],'_left.csv'), sep=",", col.names = FALSE, row.names = FALSE)
+  write.table(means_right[[i]], paste0('./data_new/mean_all_', names[i],'_right.csv'), sep=",", col.names = FALSE, row.names = FALSE)
 }
+
