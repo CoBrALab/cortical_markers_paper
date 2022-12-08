@@ -1,6 +1,5 @@
 # Compute spatial distribution average of cortical MRI markers
 
-install.packages("RMINC")
 library(RMINC)
 library(readxl)
 library(reshape2)
