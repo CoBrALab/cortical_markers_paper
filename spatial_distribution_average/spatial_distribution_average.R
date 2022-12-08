@@ -1,11 +1,13 @@
-# Across-subjects average of each marker
+# Compute spatial distribution average of cortical MRI markers
 
+install.packages("RMINC")
 library(RMINC)
 library(readxl)
 library(reshape2)
 
 wd = getwd() # IMPORTANT: working directory has to be the same directory that the R file is in
-dir.create("./results/", showWarnings = FALSE) # create results folder
+dir.create("./data_new/", showWarnings = FALSE) # create new results folder
+dir.create("./spin_test/", showWarnings = FALSE) # create new results folder
 
 # Specify the paths to excel files and vertex files
 path_to_csv = "../../master_anon.csv"
@@ -14,7 +16,7 @@ path_to_outputs = "../../vertex_files_20mm_anon/"
 # Import datasets
 all_dataset = read.csv(path_to_csv)
 
-# Remove IDs that don't pass CIVET QC, T1w QC or T2w QC
+# Remove IDs that don't pass CIVET QC (0=fail, 2=perfect), T1w QC or T2w QC (1,2 = pass; >2.5 = fail)
 all_subset = subset(all_dataset, (all_dataset$qc_civet != 0) & (all_dataset$qc_t1w <= 2) & (all_dataset$qc_t2w <= 2), select=c(ID, age, sex))
 
 # Encode vertex files
@@ -34,11 +36,9 @@ markers_left[[5]] = paste0(path_to_outputs,"t1t2_ratio_25_WM/", all_subset$ID, "
 markers_right[[5]] = paste0(path_to_outputs,"t1t2_ratio_25_WM/", all_subset$ID, "_25_WM_rsl_right.txt")
 markers_left[[6]] = paste0(path_to_outputs,"t1t2_ratio_50_GM/", all_subset$ID, "_50_GM_rsl_left.txt")
 markers_right[[6]] = paste0(path_to_outputs,"t1t2_ratio_50_GM/", all_subset$ID, "_50_GM_rsl_right.txt")
-markers_left[[7]] = paste0(path_to_outputs,"sigmoid_resid/", all_subset$ID, "_model_resid_left_20mm_rsl.txt")
-markers_right[[7]] = paste0(path_to_outputs,"sigmoid_resid/", all_subset$ID, "_model_resid_right_20mm_rsl.txt")
 
 # Marker list (in the right order)
-names = c("BSC", "GWC", "CT", "t1t2_ratio_25", "t1t2_ratio_25_WM", "t1t2_ratio_50", "sig_resid")
+names = c("BSC", "GWC", "CT", "t1t2_ratio_25", "t1t2_ratio_25_WM", "t1t2_ratio_50")
 
 # Initialize lists
 means_left = list()
@@ -55,7 +55,7 @@ for (i in 1:7){
   print(head(markers_left[[i]]))
 
   # Calculate average
-  print("Compute vertex-wise means and SD")
+  print("Compute vertex-wise means")
   means_left[[i]] = vertexMean(markers_left[[i]])
   means_right[[i]] = vertexMean(markers_right[[i]])
 
@@ -66,9 +66,9 @@ for (i in 1:7){
   }
 
   # Write results to csv
-  write.csv(mean_thresholds, './results/mean_thresholds_all.csv', row.names = TRUE)
+  write.csv(mean_thresholds, './data_new/mean_thresholds_all.csv', row.names = TRUE)
   
   print("Write results to csv")
-  write.table(means_left[[i]], paste0('./results/mean_all_', names[i],'_left.csv'), sep=",", col.names = TRUE, row.names = FALSE)
-  write.table(means_right[[i]], paste0('./results/mean_all_', names[i],'_right.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+  write.table(means_left[[i]], paste0('./data_new/mean_all_', names[i],'_left.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+  write.table(means_right[[i]], paste0('./data_new/mean_all_', names[i],'_right.csv'), sep=",", col.names = TRUE, row.names = FALSE)
 }

@@ -5,7 +5,8 @@ library(readxl)
 library(reshape2)
 
 wd = getwd() # IMPORTANT: working directory has to be the same directory that the R file is in
-dir.create("./results/", showWarnings = FALSE) # create results folder
+dir.create("./data_new/", showWarnings = FALSE) # create results folder
+dir.create("./spin_test/", showWarnings = FALSE) # create new results folder
 
 # Specify the paths to excel files and vertex files
 path_to_csv = "../../master_anon.csv"
@@ -14,7 +15,7 @@ path_to_outputs = "../../vertex_files_20mm_anon/"
 # Import datasets
 all_dataset = read.csv(path_to_csv)
 
-# Remove IDs that don't pass CIVET QC, T1w QC or T2w QC
+# Remove IDs that don't pass CIVET QC (0=fail, 2=perfect), T1w QC or T2w QC (1,2 = pass; >2.5 = fail)
 all_subset = subset(all_dataset, (all_dataset$qc_civet != 0) & (all_dataset$qc_t1w <= 2) & (all_dataset$qc_t2w <= 2), select=c(ID, age, sex))
 
 # Substract age by the minimum age
@@ -77,7 +78,7 @@ for (i in 1:6){
   tvalue_thresholds = cbind(tvalue_thresholds, rep(NA, 25), paste0(names[i], " left"), melt(print(vertexFDR(lm_markers_left[[i]]))))
   tvalue_thresholds = cbind(tvalue_thresholds, rep(NA, 25), paste0(names[i], " right"), melt(print(vertexFDR(lm_markers_right[[i]]))))
   
-  write.csv(tvalue_thresholds, './results/tvalue_thresholds.csv', row.names = TRUE)
+  write.csv(tvalue_thresholds, './data_new/tvalue_thresholds.csv', row.names = TRUE)
   
   lm_markers_left[[i]] = as.data.frame(cbind(lm_markers_left[[i]], vertexFDR(lm_markers_left[[i]])))
   lm_markers_right[[i]] = as.data.frame(cbind(lm_markers_right[[i]], vertexFDR(lm_markers_right[[i]])))
@@ -107,11 +108,11 @@ for (i in 1:6){
     beta_thresholds_age1[tresh,i] = mean(rbind(lm_markers_left[[i]]$`beta_polyAge_2_1`, lm_markers_right[[i]]$`beta_polyAge_2_1`)) + thresholds[tresh] * sd(rbind(lm_markers_left[[i]]$`beta_polyAge_2_1`, lm_markers_right[[i]]$`beta_polyAge_2_1`))
     beta_thresholds_age2[tresh,i] = mean(rbind(lm_markers_left[[i]]$`beta_polyAge_2_2`, lm_markers_right[[i]]$`beta_polyAge_2_2`)) + thresholds[tresh] * sd(rbind(lm_markers_left[[i]]$`beta_polyAge_2_2`, lm_markers_right[[i]]$`beta_polyAge_2_2`))
   }
-  write.csv(beta_thresholds_age1, './results/beta_thresholds_age1.csv', row.names = TRUE)
-  write.csv(beta_thresholds_age2, './results/beta_thresholds_age2.csv', row.names = TRUE)
+  write.csv(beta_thresholds_age1, './data_new/beta_thresholds_age1.csv', row.names = TRUE)
+  write.csv(beta_thresholds_age2, './data_new/beta_thresholds_age2.csv', row.names = TRUE)
   
   # Write results to csv
   print("Write to csv")
-  write.table(lm_markers_left[[i]], paste0('./results/lm_', names[i],'_left_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
-  write.table(lm_markers_right[[i]], paste0('./results/lm_', names[i],'_right_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+  write.table(lm_markers_left[[i]], paste0('./data_new/lm_', names[i],'_left_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+  write.table(lm_markers_right[[i]], paste0('./data_new/lm_', names[i],'_right_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
 }

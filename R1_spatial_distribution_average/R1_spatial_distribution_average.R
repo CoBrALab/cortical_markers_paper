@@ -1,11 +1,12 @@
-# Across-subjects average of each marker (R1 subsample)
+# Compute spatial distribution average of R1 (and other markers in the subsample)
 
 library(RMINC)
 library(readxl)
 library(reshape2)
 
 wd = getwd() # IMPORTANT: working directory has to be the same directory that the R file is in
-dir.create("./results/", showWarnings = FALSE) # create results folder
+dir.create("./data_new/", showWarnings = FALSE) # create results folder
+dir.create("./spin_test/", showWarnings = FALSE) # create new results folder
 
 # Specify the paths to excel files and vertex files
 path_to_csv = "../../master_anon.csv"
@@ -14,11 +15,8 @@ path_to_outputs = "../../vertex_files_20mm_anon/"
 # Import datasets
 all_dataset = read.csv(path_to_csv)
 
-# Remove IDs that don't pass CIVET QC, T1w QC or T2w QC
+# Remove IDs that don't pass CIVET QC (0=fail, 2=perfect), T1w QC, T2w QC, and R1 QC (1,2 = pass; >2.5 = fail)
 all_subset = subset(all_dataset, (all_dataset$qc_civet != 0) & (all_dataset$qc_t1w <= 2) & (all_dataset$qc_t2w <= 2) & (all_dataset$qc_mp2rage_t1map <= 2), select=c(ID, age, sex))
-
-# Substract age by the minimum age
-all_subset$age = all_subset$age - min(all_subset$age)
 
 # Encode vertex files
 markers_left = list()
@@ -72,9 +70,9 @@ for (i in 1:length(names)){
   }
   
   cat("\nWrite results to csv")
-  write.csv(means_left[[i]], paste0('./results/mean_all_', names[i],'_left.csv'), row.names = FALSE)
-  write.csv(means_right[[i]], paste0('./results/mean_all_', names[i],'_right.csv'), row.names = FALSE)
+  write.csv(means_left[[i]], paste0('./data_new/mean_all_', names[i],'_left.csv'), row.names = FALSE)
+  write.csv(means_right[[i]], paste0('./data_new/mean_all_', names[i],'_right.csv'), row.names = FALSE)
 }
 
-write.csv(mean_thresholds, './results/mean_thresholds_all.csv', row.names = TRUE)
+write.csv(mean_thresholds, './data_new/mean_thresholds_all.csv', row.names = TRUE)
 

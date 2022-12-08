@@ -5,7 +5,8 @@ library(readxl)
 library(reshape2)
 
 wd = getwd() # IMPORTANT: working directory has to be the same directory that the R file is in
-dir.create("./results/", showWarnings = FALSE) # create results folder
+dir.create("./data_new/", showWarnings = FALSE) # create results folder
+dir.create("./spin_test/", showWarnings = FALSE) # create new results folder
 
 # Specify the paths to excel files and vertex files
 path_to_csv = "../../master_anon.csv"
@@ -14,7 +15,7 @@ path_to_outputs = "../../vertex_files_20mm_anon/"
 # Import datasets
 all_dataset = read.csv(path_to_csv)
 
-# Remove IDs that don't pass CIVET QC, T1w QC or T2w QC
+# Remove IDs that don't pass CIVET QC (0=fail, 2=perfect), T1w QC or T2w QC (1,2 = pass; >2.5 = fail)
 all_subset = subset(all_dataset, (all_dataset$qc_civet != 0) & (all_dataset$qc_t1w <= 2) & (all_dataset$qc_t2w <= 2), select=c(ID, age, sex))
 
 # Substract age by the minimum age
@@ -86,12 +87,12 @@ for (i in 1:length(names)){
 
   # Write results to csv
   cat("\nWrite to csv")
-  write.table(lm_markers_left[[i]], paste0('./results/lm_', names[i],'_left_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
-  write.table(lm_markers_right[[i]], paste0('./results/lm_', names[i],'_right_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+  write.table(lm_markers_left[[i]], paste0('./data_new/lm_', names[i],'_left_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
+  write.table(lm_markers_right[[i]], paste0('./data_new/lm_', names[i],'_right_FDR.csv'), sep=",", col.names = TRUE, row.names = FALSE)
 
   cat("\nBeta thresholds csv for visualization")
   for (tresh in 1:length(thresholds)){
     beta_thresholds[tresh,i] = mean(rbind(lm_markers_left[[i]]$`beta-age`, lm_markers_right[[i]]$`beta-age`)) + thresholds[tresh] * sd(rbind(lm_markers_left[[i]]$`beta-age`, lm_markers_right[[i]]$`beta-age`))
   }
-  write.csv(beta_thresholds, './results/beta_thresholds.csv', row.names = TRUE)
+  write.csv(beta_thresholds, './data_new/beta_thresholds.csv', row.names = TRUE)
 }

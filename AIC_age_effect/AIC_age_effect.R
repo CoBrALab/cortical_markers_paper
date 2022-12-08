@@ -5,7 +5,8 @@ library(ggplot2)
 library(readxl)
 
 wd = getwd() # IMPORTANT: working directory has to be the same directory that the R file is in
-dir.create("./results/", showWarnings = FALSE) # create results folder
+dir.create("./data_new/", showWarnings = FALSE) # create results folder
+dir.create("./spin_test/", showWarnings = FALSE) # create new results folder
 
 # Specify the paths to excel files and vertex files
 path_to_csv = "../../master_anon.csv"
@@ -14,7 +15,7 @@ path_to_outputs = "../../vertex_files_20mm_anon/"
 # Import dataset
 all_dataset = read.csv(path_to_csv)
 
-# Remove IDs that don't pass CIVET QC, T1w QC or T2w QC
+# Remove IDs that don't pass CIVET QC (0=fail, 2=perfect), T1w QC or T2w QC (1,2 = pass; >2.5 = fail)
 all_subset = subset(all_dataset, (all_dataset$qc_civet != 0) & (all_dataset$qc_t1w <= 2) & (all_dataset$qc_t2w <= 2), select=c(ID, age, sex))
 
 # Substract age by the minimum age
@@ -86,7 +87,7 @@ for (i in 1:length(names)){
   
   # Write results to csv
   cat("\nWrite results to csv")
-  write.csv(results_left[[i]], paste0('./results/AIC_', names[i],'_left.csv'), row.names = FALSE)
+  write.csv(results_left[[i]], paste0('./data_new/AIC_', names[i],'_left.csv'), row.names = FALSE)
 }
 
 # Run AIC for the right hemisphere values
@@ -123,5 +124,5 @@ for (i in 1:length(names)){
   
   # Write results to csv
   cat("\nWrite results to csv")
-  write.csv(results_right[[i]], paste0('./results/AIC_', names[i],'_right.csv'), row.names = FALSE)
+  write.csv(results_right[[i]], paste0('./data_new/AIC_', names[i],'_right.csv'), row.names = FALSE)
 }
