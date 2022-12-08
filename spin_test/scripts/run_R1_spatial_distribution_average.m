@@ -1,5 +1,5 @@
 
-analysis_directory = '../R1_spatial_distribution_average/data_new/';
+analysis_directory = '../../R1_spatial_distribution_average/data_new/';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% BSC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

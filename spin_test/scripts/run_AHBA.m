@@ -1,5 +1,5 @@
 
-analysis_directory = '../AHBA/data_paper/';
+analysis_directory = '../../AHBA/data_paper/';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% BSC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

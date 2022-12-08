@@ -1,5 +1,5 @@
 
-analysis_directory = '../lin_age_effect/data_new/';
+analysis_directory = '../../lin_age_effect/data_new/';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% BSC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

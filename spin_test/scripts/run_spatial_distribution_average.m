@@ -1,5 +1,5 @@
 
-analysis_directory = '../spatial_distribution_average/data_new/';
+analysis_directory = '../../spatial_distribution_average/data_new/';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% BSC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Spin BSC data

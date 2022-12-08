@@ -1,6 +1,6 @@
 
-analysis_directory = '../BigBrain/data_paper/';
-mri_markers_directory = '../spatial_distribution_average/data_new/';
+analysis_directory = '../../BigBrain/data_paper/';
+mri_markers_directory = '../../spatial_distribution_average/data_new/';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% BigBrain 25_GM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
