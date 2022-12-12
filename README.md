@@ -1,4 +1,4 @@
-All code used to generate the results seen in the manuscript ____
+All code used to generate the results seen in the manuscript "High spatial overlap but diverging age-related trajectories of cortical magnetic resonance imaging markers aiming to represent intracortical myelin and microstructure"
 
 # Dependencies
 * minc-toolkit/1.9.17
