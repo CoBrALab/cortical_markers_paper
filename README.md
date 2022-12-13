@@ -1,5 +1,7 @@
 All code used to generate the results seen in the manuscript "High spatial overlap but diverging age-related trajectories of cortical magnetic resonance imaging markers aiming to represent intracortical myelin and microstructure"
 
+The preprint is available here: https://doi.org/10.1101/2022.01.27.477925
+
 # Dependencies
 * minc-toolkit/1.9.17
 * R/3.5.1
