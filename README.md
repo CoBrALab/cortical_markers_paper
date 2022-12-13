@@ -2,6 +2,8 @@ All code used to generate the results seen in the manuscript "High spatial overl
 
 The preprint is available here: https://doi.org/10.1101/2022.01.27.477925
 
+For questions/comments, please reach out to Olivier Parent (olivier.parent@mail.mcgill.ca)
+
 # Dependencies
 * minc-toolkit/1.9.17
 * R/3.5.1
