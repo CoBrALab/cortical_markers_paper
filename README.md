@@ -1,10 +1,43 @@
-All code used to generate the results seen in the manuscript ____
+All code used to generate the results seen in the manuscript "High spatial overlap but diverging age-related trajectories of cortical magnetic resonance imaging markers aiming to represent intracortical myelin and microstructure"
 
 # Dependencies
 * minc-toolkit/1.9.17
 * R/3.5.1
 * RMINC/1.5.2.3
 * Matlab/2020a
+
+# Directory structure
+AHBA -> Analysis relating gene-expression-derived cell-type densities with cortical MRI markers
+- data_paper -> Vertex-wise gene-expression-derived cell-type densities
+
+AIC_age_effect -> Analysis determining optimal shape of age trajectories with the Akaike Information Criterion (AIC) of each cortical MRI marker
+- data_paper -> Vertex-wise optimal shape of age trajectories
+- AIC_age_effect.R -> Analysis code
+
+BigBrain -> Analysis relating histology-derived cell density with cortical MRI markers
+- data_paper -> Vertex-wise histology-derived cell density
+
+R1_spatial_distribution_average -> Analysis relating average R1 relaxation rates with cortical MRI markers
+- data_paper -> Vertex-wise average R1 values
+- R1_spatial_distribution_average.R -> Analysis code
+
+lin_age_effect -> Linear age effect of each cortical MRI marker
+- data_paper -> Vertex-wise beta coefficients of linear age effect
+- lin_age_effect.R -> Analysis code
+
+quad_age_effect -> Quadratic age effect of each cortical MRI marker
+- data_paper -> Vertex-wise beta coefficients of quadratic age effect
+- quad_age_effect.R -> Analysis code
+
+spatial_distribution_average -> Computing spatial distribution average for each cortical MRI marker
+- data_paper -> Vertex-wise beta average values for each cortical MRI marker
+- spatial_distribution_average.R -> Analysis code
+
+spin_test -> Spatial correlations and p-values for each analysis above using the spin test
+- data -> Masks of midline vertices
+- scripts -> All scripts for the spin test. Run the files starting with run_
+
+master_anon.csv -> CSV with demographic, cognitive, and quality control (QC) data for all included subjects
 
 # Steps to run code
 1. Make sure all dependencies are loaded
