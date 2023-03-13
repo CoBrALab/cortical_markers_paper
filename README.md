@@ -1,6 +1,8 @@
-All code used to generate the results seen in the manuscript "High spatial overlap but diverging age-related trajectories of cortical magnetic resonance imaging markers aiming to represent intracortical myelin and microstructure"
+All code used to generate the results seen in the manuscript "High spatial overlap but diverging age-related trajectories of cortical magnetic resonance imaging markers aiming to represent intracortical myelin and microstructure" published in Human Brain Mapping by Olivier Parent and colleagues (2023).
 
-The preprint is available here: https://doi.org/10.1101/2022.01.27.477925
+The article is available here: https://doi.org/10.1002/hbm.26259
+
+Vertex-wise files are available on the Zenodo platform (https://zenodo.org/record/7729120#.ZA87d3bMK3A).
 
 For questions/comments, please reach out to Olivier Parent (olivier.parent@mail.mcgill.ca)
 
@@ -49,7 +51,7 @@ master_anon.csv -> CSV with demographic, cognitive, and quality control (QC) dat
 ```
 git clone https://github.com/parent41/cortical_markers_paper
 ```
-3. Download subject-wise vertex data for cortical MRI markers from the [Canadian Open Neuroscience Platform (CONP)](https://portal.conp.ca/index). Put all files in a directory named "vertex_files_20mm_anon" located in the main directory
+3. Download subject-wise vertex data for cortical MRI markers from the [Canadian Open Neuroscience Platform (CONP)](https://portal.conp.ca/index) and on [Zenodo](https://zenodo.org/record/7729120#.ZA87d3bMK3A). Put all files from the directory "vertex_files_20mm_anon" in a directory of the same name located in the main directory
 4. Run R scripts to generate marker maps (for spatial distribution average, AIC of age effect shape, linear age effect, quadratic age effect)
 ```
 # First set working directory to the specific analysis folder (e.g., spatial_distribution_average)
